@@ -1,7 +1,9 @@
 # Create your views here.
+from django.views.generic import TemplateView, ListView
 from django.shortcuts import render
 from django.http import HttpResponse
 
-def index(request):
-    return HttpResponse("Hello")
+class MainPage(TemplateView):
+    template_name = 'main_page.html'
+
 
