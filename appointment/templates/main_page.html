@@ -6,6 +6,28 @@
         <title>Appointment Page</title>
     </head>
     <body>
+      <br>
+      <center>
       <a>Make your appointment</a>
+      <br>
+      <br>
+      {% if not user.is_authenticated %}
+      <form method="get" action="{% url 'login' %}">
+        {% csrf_token %}
+        <button type="submit">Zaloguj</button>
+      </form>
+      <br>
+      <form method="get" action="{% url 'user_registration' %}">
+          {% csrf_token %}
+          <button type="submit">Zarejestruj</button>
+      </form>
+      <br>
+      {% elif user.is_authenticated %}
+      <form method="POST" action="{% url 'user_logout' %}">
+          {% csrf_token %}
+          <button type="submit">Log out</button>
+      </form>
+      {% endif %}
+      </center>
     </body>
 </html>
