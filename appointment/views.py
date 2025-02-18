@@ -44,3 +44,33 @@ class UserRegisterView(FormView):
 class UserLogoutView(LogoutView):
     redirect_authenticated_user = True
     success_url = 'main_page'
+
+
+class CreateDoctorView(FormView):
+    template_name = "doctor.html"
+    form_class = CreateDoctor
+    success_url = reverse_lazy('admin_page')
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+
+class CreateDoctorTypeView(FormView):
+    template_name = "specialization.html"
+    form_class = CreateDoctorType
+    success_url = reverse_lazy('admin_page')
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+
+class AppointmentDatesView(FormView):
+    template_name = "appointment_date.html"
+    form_class = AppointmentDatesForm
+    success_url = reverse_lazy('admin_page')
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)

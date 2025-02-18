@@ -8,7 +8,7 @@
     <body>
       <br>
       <center>
-      <a>Make your appointment</a>
+      <a>Please select</a>
       <br>
       <br>
       {% if not user.is_authenticated %}
@@ -24,9 +24,7 @@
       <br>
       {% elif user.is_superuser %}
       <p> Logged in user: {{ user.username }}</p>
-      <form action="{% url 'doctor_visit' %}">
-        <button type="submit">Add specialization, doctor, appointments dates</button>
-      </form>
+      <a href="{% url 'admin_page' %}" class="button">Add specialization, doctor, appointments dates</a>
       <br>
       <form method="POST" action="{% url 'user_logout' %}">
           {% csrf_token %}
