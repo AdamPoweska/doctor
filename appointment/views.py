@@ -20,6 +20,9 @@ class UserLoginView(LoginView):
     redirect_authenticated_user = True
     success_url = reverse_lazy('doctor_visit')
 
+    def get_success_url(self):
+        return self.success_url
+
 
 class UserRegisterView(FormView):
     template_name = 'registration/user_registration.html'
@@ -28,8 +31,12 @@ class UserRegisterView(FormView):
 
     def form_valid(self, form):
         user = form.save() # zapisanie użytkownika, FormView nie robi tego automatycznie
-        # user_group, _ = Group.objects.get_or_create(name="new_hire_permissions") # get_or_create() zwraca krotkę (group, created) _ oznacza, że ignorujemy drugą wartość (created, czyli czy grupa została utworzona).
-        # user.groups.add(user_group) # nadanie nowemu użytkownikowi grupy new_hire_permissions - czyli podstawowe dostępy -> działa, jest wszystko w panelu admina
         login(self.request, user) # zalogowanie użytkownika
         return super().form_valid(form)
 
+class UserLogoutView(LogoutView):
+    redirect_authenticated_user = True
+    success_url = 'main_page'
+
+    def get_success_url(self):
+        return self.success_url
