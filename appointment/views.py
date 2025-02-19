@@ -1,7 +1,7 @@
 # Create your views here.
-from django.shortcuts import render, redirect
+from django.views import View
 from django.views.generic import TemplateView, ListView
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
@@ -109,9 +109,51 @@ class VisitDateSelectView(FormView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         date_time_pk = self.kwargs.get('pk')
-        # filtrowanie po specjalizacji
+        # filtrowanie po dostępnych datach
         kwargs['initial'] = {
-            'doctor_date_select': DoctorName.objects.filter(appointmentdates__pk=date_time_pk)
+            'doctor_date_select': AppointmentDates.objects.filter(doctor__pk=date_time_pk)
         }
         return kwargs
+    ####################################################
+    def form_valid(self, form):
+        visit_details = form.cleaned_data['doctor_date_select']
+        self.request.session['doctor_type'] = visit_details.doctor.main_specialization.pk
+        self.request.session['doctor_name'] = visit_details.doctor.pk
+        self.request.session['visit_date'] = visit_details.pk
+        # przekierowanie
+        return redirect('visit_confirmation', pk=visit_details.pk)
     
+
+class ConfirmAppointmentView(TemplateView):
+    template_name = 'visit_confirmation.html'
+    success_url = reverse_lazy('main_page')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # pobieranie danych z sesji
+        doctor_type_pk = self.request.session.get('doctor_type')
+        doctor_name_pk = self.request.session.get('doctor_name')
+        visit_date_pk = self.request.session.get('visit_date')
+
+        # przekazanie danych do kontekstu
+        context['doctor_type'] = DoctorType.objects.get(pk=doctor_type_pk)
+        context['doctor_name'] = DoctorName.objects.get(pk=doctor_name_pk)
+        context['visit_date'] = AppointmentDates.objects.get(pk=visit_date_pk)
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        doctor_type_pk = request.session.get('doctor_type')
+        doctor_name_pk = request.session.get('doctor_name')
+        visit_date_pk = request.session.get('visit_date')
+
+        # jeżeli wszystkie dane są dostępne
+        if doctor_type_pk and doctor_name_pk and visit_date_pk:
+            # zapisujemy wizytę do bd
+            FinalAppointmentDetails.objects.create(
+                doctor_type_id=doctor_type_pk,
+                doctor_name_id=doctor_name_pk,
+                visit_date_id=visit_date_pk
+            )
+            return redirect(self.success_url)

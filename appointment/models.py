@@ -24,4 +24,15 @@ class AppointmentDates(models.Model):
     time = models.TimeField(null=True)
 
     def __str__(self):
-        return f"{self.date} | {self.time}"  
+        return f"{self.date} at {self.time}"
+    
+
+class FinalAppointmentDetails(models.Model):
+    doctor_type = models.ForeignKey(DoctorType, on_delete=models.CASCADE)
+    doctor_name = models.ForeignKey(DoctorName, on_delete=models.CASCADE)
+    visit_date = models.ForeignKey(AppointmentDates, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Your visit with {self.doctor_name} ({self.doctor_type}) as of: {self.visit_date.date} at: {self.visit_date.time}"
+    
+

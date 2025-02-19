@@ -4,7 +4,6 @@ from . import views
 
 urlpatterns = [
     path("", views.MainPage.as_view(), name="main_page"),
-    # path('doctor_visit/', views.DoctorVisit.as_view(), name="doctor_visit"),
     path('admin_page/', views.AdminPage.as_view(), name='admin_page'),
     path('login/', views.UserLoginView.as_view(), name='login'),
     path('user_registration/', views.UserRegisterView.as_view(), name='user_registration'),
@@ -15,4 +14,5 @@ urlpatterns = [
     path('doctor_visit/', views.DoctorTypeSelectView.as_view(), name='doctor_visit'),
     path('choose_doctor_name/<int:pk>', views.DoctorNameSelectView.as_view(), name='choose_doctor_name'),
     path('choose_visit_date_time/<int:pk>', views.VisitDateSelectView.as_view(), name='choose_visit_date_time'),
+    path('visit_confirmation/<int:pk>', views.ConfirmAppointmentView.as_view(), name='visit_confirmation'),
 ]

@@ -45,10 +45,12 @@ class DoctorNameSelect(forms.Form):
         required=True
     )
 
-# NOWY WIDOK
+
 class VisitDateSelect(forms.Form):
     doctor_date_select = forms.ModelChoiceField(
         queryset=AppointmentDates.objects.all(),
         widget=forms.RadioSelect,
         required=True
     )
+
+

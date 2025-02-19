@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+    <title>Summary</title>
+</head>
+<body>
+    <h1>Summary</h1>
+    <p><strong>Doctor Type:</strong> {{ doctor_type.specialization }}</p>
+    <p><strong>Doctor Name:</strong> {{ doctor_name.first_name }} {{ doctor_name.last_name }}</p>
+    <p><strong>Date:</strong> {{ visit_date.date }} at {{ visit_date.time }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>
