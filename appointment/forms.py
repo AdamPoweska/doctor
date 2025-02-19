@@ -38,12 +38,24 @@ class DoctorTypeSelect(forms.Form):
     )
 
 
+# class DoctorNameSelect(forms.Form):
+#     doctor_name_select = forms.ModelChoiceField(
+#         queryset=DoctorName.objects.all(),
+#         widget=forms.RadioSelect,
+#         required=True
+#     )
+
 class DoctorNameSelect(forms.Form):
-    doctor_name_select = forms.ModelChoiceField(
-        queryset=DoctorName.objects.all(),
-        widget=forms.RadioSelect,
-        required=True
-    )
+    doctor_name_select = forms.ModelChoiceField(queryset=DoctorName.objects.all(), label="Choose doctor")
+
+    def __init__(self, *args, **kwargs):
+        # przekazanie tylko odpwoednich lekarzy przez widok
+        specialization_pk = kwargs.pop('specialization_pk', None)
+        super().__init__(*args, **kwargs)
+        
+        if specialization_pk:
+            # filtracja lekarzy po typie
+            self.fields['doctor_name_select'].queryset = DoctorName.objects.filter(main_specialization__pk=specialization_pk)
 
 
 class VisitDateSelect(forms.Form):

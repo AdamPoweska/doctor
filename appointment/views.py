@@ -90,10 +90,9 @@ class DoctorNameSelectView(FormView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         specialization_pk = self.kwargs.get('pk')
-        # filtrowanie po specjalizacji
-        kwargs['initial'] = {
-            'doctor_name_select': DoctorName.objects.filter(main_specialization__pk=specialization_pk)
-        }
+
+        kwargs['specialization_pk'] = specialization_pk
+
         return kwargs
     
     def form_valid(self, form):
@@ -114,9 +113,10 @@ class VisitDateSelectView(FormView):
             'doctor_date_select': AppointmentDates.objects.filter(doctor__pk=date_time_pk)
         }
         return kwargs
-    ####################################################
+
     def form_valid(self, form):
         visit_details = form.cleaned_data['doctor_date_select']
+        # zapisanie danych do sesji
         self.request.session['doctor_type'] = visit_details.doctor.main_specialization.pk
         self.request.session['doctor_name'] = visit_details.doctor.pk
         self.request.session['visit_date'] = visit_details.pk
