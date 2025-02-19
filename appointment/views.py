@@ -1,4 +1,5 @@
 # Create your views here.
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -11,10 +12,6 @@ from . forms import *
 
 class MainPage(TemplateView):
     template_name = 'main_page.html'
-
-
-class DoctorVisit(TemplateView):
-    template_name = 'doctor_visit.html'
 
 
 class AdminPage(TemplateView):
@@ -74,3 +71,47 @@ class AppointmentDatesView(FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+    
+
+class DoctorTypeSelectView(FormView):
+    template_name = 'doctor_visit.html'
+    form_class = DoctorTypeSelect
+    
+    def form_valid(self, form):
+        doctor_type = form.cleaned_data['doctor_type_select']
+        return redirect('choose_doctor_name', pk=doctor_type.pk)
+
+
+class DoctorNameSelectView(FormView):
+    model = DoctorName
+    form_class = DoctorNameSelect
+    template_name = 'choose_doctor_name.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        specialization_pk = self.kwargs.get('pk')
+        # filtrowanie po specjalizacji
+        kwargs['initial'] = {
+            'doctor_name_select': DoctorName.objects.filter(main_specialization__pk=specialization_pk)
+        }
+        return kwargs
+    
+    def form_valid(self, form):
+        doctor_name_spec = form.cleaned_data['doctor_name_select']
+        return redirect('choose_visit_date_time', pk=doctor_name_spec.pk)
+
+
+class VisitDateSelectView(FormView):
+    model = AppointmentDates
+    form_class = VisitDateSelect
+    template_name = 'choose_visit_date_time.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        date_time_pk = self.kwargs.get('pk')
+        # filtrowanie po specjalizacji
+        kwargs['initial'] = {
+            'doctor_date_select': DoctorName.objects.filter(appointmentdates__pk=date_time_pk)
+        }
+        return kwargs
+    
