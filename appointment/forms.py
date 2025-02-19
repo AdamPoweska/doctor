@@ -33,17 +33,9 @@ class AppointmentDatesForm(forms.ModelForm):
 class DoctorTypeSelect(forms.Form):
     doctor_type_select = forms.ModelChoiceField(
         queryset=DoctorType.objects.all(),
-        widget=forms.RadioSelect, # bez tego pojawi się lista rozwijana
         required=True
     )
 
-
-# class DoctorNameSelect(forms.Form):
-#     doctor_name_select = forms.ModelChoiceField(
-#         queryset=DoctorName.objects.all(),
-#         widget=forms.RadioSelect,
-#         required=True
-#     )
 
 class DoctorNameSelect(forms.Form):
     doctor_name_select = forms.ModelChoiceField(queryset=DoctorName.objects.all(), label="Choose doctor")
@@ -61,8 +53,5 @@ class DoctorNameSelect(forms.Form):
 class VisitDateSelect(forms.Form):
     doctor_date_select = forms.ModelChoiceField(
         queryset=AppointmentDates.objects.all(),
-        widget=forms.RadioSelect,
         required=True
     )
-
-
