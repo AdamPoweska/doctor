@@ -107,11 +107,9 @@ class VisitDateSelectView(FormView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        date_time_pk = self.kwargs.get('pk')
-        # filtrowanie po dostępnych datach
-        kwargs['initial'] = {
-            'doctor_date_select': AppointmentDates.objects.filter(doctor__pk=date_time_pk)
-        }
+        date_time_pk = self.kwargs.get('pk')        
+        kwargs['doctor_pk'] = date_time_pk
+
         return kwargs
 
     def form_valid(self, form):
@@ -131,12 +129,12 @@ class ConfirmAppointmentView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # pobieranie danych z sesji
+        # pobierz dane z sesji
         doctor_type_pk = self.request.session.get('doctor_type')
         doctor_name_pk = self.request.session.get('doctor_name')
         visit_date_pk = self.request.session.get('visit_date')
 
-        # przekazanie danych do kontekstu
+        # przekaż dane do kontekstu
         context['doctor_type'] = DoctorType.objects.get(pk=doctor_type_pk)
         context['doctor_name'] = DoctorName.objects.get(pk=doctor_name_pk)
         context['visit_date'] = AppointmentDates.objects.get(pk=visit_date_pk)

@@ -34,5 +34,3 @@ class FinalAppointmentDetails(models.Model):
 
     def __str__(self):
         return f"Your visit with {self.doctor_name} ({self.doctor_type}) as of: {self.visit_date.date} at: {self.visit_date.time}"
-    
-

@@ -38,7 +38,10 @@ class DoctorTypeSelect(forms.Form):
 
 
 class DoctorNameSelect(forms.Form):
-    doctor_name_select = forms.ModelChoiceField(queryset=DoctorName.objects.all(), label="Choose doctor")
+    doctor_name_select = forms.ModelChoiceField(
+        queryset=DoctorName.objects.all(), 
+        label="Choose doctor"
+    )
 
     def __init__(self, *args, **kwargs):
         # przekazanie tylko odpwoednich lekarzy przez widok
@@ -53,5 +56,14 @@ class DoctorNameSelect(forms.Form):
 class VisitDateSelect(forms.Form):
     doctor_date_select = forms.ModelChoiceField(
         queryset=AppointmentDates.objects.all(),
-        required=True
+        label="Choose date"
+        # required=True
     )
+
+    def __init__(self, *args, **kwargs):
+        # przekazanie doctor-PK zeby zobaczyc przypisane im daty
+        doctor_pk = kwargs.pop('doctor_pk', None)
+        super().__init__(*args, **kwargs)
+        
+        if doctor_pk:
+            self.fields['doctor_date_select'].queryset = AppointmentDates.objects.filter(doctor__pk=doctor_pk)
