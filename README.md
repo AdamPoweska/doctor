@@ -6,6 +6,10 @@ Responsibilities:
 • Implemented nested routing to support hierarchical access patterns, such as specialization → doctor → appointments.  
 • Created multiple serializer layers (simple, detailed, and nested) to accommodate varied API consumption needs.  
 • Integrated custom validation logic with UniqueTogetherValidator to prevent duplicate doctor records.  
+• Developed custom queryset filtering for nested resources, such as appointments per doctor.  
+• Implemented role-based permissions to restrict write operations to authenticated or staff users.  
+• Designed a clean separation between core models (Doctor, Specialization, Appointment) to ensure scalability and maintainability.  
+• Extended the system into a dedicated DRF API version to enable seamless integration with frontend and external systems.
 
 User_1
 P@ssword!1
